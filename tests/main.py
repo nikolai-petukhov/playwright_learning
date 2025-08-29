@@ -7,15 +7,12 @@ with sync_playwright() as playwright:
     # Create a new page
     page = browser.new_page()
     # Visit the playwright website
-    page.goto("https://playwright.dev/python")
+    page.goto("https://bootswatch.com/default")
 
     #  Locate a link element with "Docs" text
 
-    docs_button = page.get_by_role('link', name="Docs")
-    docs_button.click()
-
-    # Get the url
-    print("Docs: ", page.url)
+    link = page.locator("a.dropdown-item").first
+    link.click(timeout=2000) # force=True
 
 
     browser.close()
