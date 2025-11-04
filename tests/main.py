@@ -4,27 +4,32 @@ from creds import EMAIL, PASSWORD
 
 with sync_playwright() as playwright:
     
-    browser = playwright.firefox.launch(headless=False, slow_mo=500)
+    browser = playwright.firefox.launch(headless=False, slow_mo=500) #args=["--disable-dev-shm-usage", "--disable-blink-features=AutomationControlled"]
+    context = browser.new_context()
     
-    page = browser.new_page()
+    page = context.new_page()
     
-    page.goto("https://accounts.google.com")
-
-    email_input = page.get_by_label("Email or phone")
-    next_button = page.get_by_role("button", name="Next")
-    try_again_button = page.get_by_role("link", name="Try again")
-    password_input = page.get_by_label("Enter your password")
+    page.goto("https://www.21vek.by")
 
 
-    while True:
-        email_input.fill(EMAIL)
-        next_button.click()
+    accept_coockies = page.get_by_role("button", name="Принять")
+    account_button = page.get_by_text("Аккаунт")
+    enter_button = page.get_by_role("button", name="Войти")
+    email_input = page.get_by_label("Электронная почта")
+    password_input = page.get_by_label("Пароль")
+    continue_button = page.get_by_role("button", name="Продолжить")
 
-        if try_again_button:
-            try_again_button.click()
-        else:
-            break
-    
-    next_button.click()
+    accept_coockies.click()
+    account_button.click()
+    enter_button.click()
+    email_input.fill(EMAIL)
     password_input.fill(PASSWORD)
-    next_button.click()
+    continue_button.click()
+
+    page.pause()
+
+    context.storage_state(
+        path="playwright/.auth/storage_state.json"
+    )
+
+    context.close()
