@@ -3,3 +3,6 @@ venv/
 env/
 .venv/
 tests/__pycache__
+tests/videos
+tests/screenshots
+.idea/
